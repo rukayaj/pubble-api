@@ -13,5 +13,8 @@ services:
       - db
     environment:
       DATABASE_URL: postgres://postgres@db
+    stdin_open: true
+    tty: true
+
   db:
     image: postgres:10.3-alpine

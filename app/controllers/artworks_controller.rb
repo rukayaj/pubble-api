@@ -17,9 +17,9 @@ class ArtworksController < ApplicationController
   # POST /artworks
   def create
     @artwork = @book.artworks.new(artwork_params)
-
+    byebug
     if @artwork.save
-      render json: @artwork, status: :created, location: @artwork
+      render json: @artwork, status: :created, location: book_url(@artwork)
     else
       render json: @artwork.errors, status: :unprocessable_entity
     end
