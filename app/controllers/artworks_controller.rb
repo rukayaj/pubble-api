@@ -1,9 +1,10 @@
 class ArtworksController < ApplicationController
+  before_action :set_book, only: [:index, :create, :show, :update, :destroy]
   before_action :set_artwork, only: [:show, :update, :destroy]
 
   # GET /artworks
   def index
-    @artworks = Artwork.all
+    @artworks = @book.artworks.all
 
     render json: @artworks
   end
@@ -15,7 +16,7 @@ class ArtworksController < ApplicationController
 
   # POST /artworks
   def create
-    @artwork = Artwork.new(artwork_params)
+    @artwork = @book.artworks.new(artwork_params)
 
     if @artwork.save
       render json: @artwork, status: :created, location: @artwork
