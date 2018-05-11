@@ -1,5 +1,5 @@
 class ArtworksController < ApplicationController
-  include HTTParty
+  require 'dreamstime_service'
   before_action :set_book, only: [:index, :create, :show, :update, :destroy]
   before_action :set_artwork, only: [:show, :update, :destroy]
 
@@ -18,23 +18,9 @@ class ArtworksController < ApplicationController
   # POST /artworks
   def create
     @artwork = @book.artworks.new(artwork_params)
-    dst_url = 'http://www.dreamstime.com/api/'
-    headers = {'Content-Type' => 'application/json'}
-
-    # Auth token
-    body = {'APIRequests': {'Authenticate': {'Verb': 'Authenticate', 'ApplicationId': 'WP-Plugin v2.0'}}}
-    response = HTTParty.post(dst_url, body: body.to_json, headers: headers) 
-    auth_token = response['APIResponses']['Authenticate']['AuthToken']
-
-    # Get image object
-    body = {'APIRequests': {'GetPaidImage': {'Verb': 'GetPaidImage', 'ImageId': @artwork.source_id, 'AuthToken': auth_token}}}
-    response = HTTParty.post(dst_url, body: body.to_json, headers: headers) 
-    image_object = JSON.parse(response.body)['APIResponses']['GetPaidImage']['Image']
     
-    # Populate artwork
-    @artwork.thumbnail_url = image_object['ThumbnailUrl']
-    @artwork.copyright = image_object['Author']
-    byebug
+    dst = DreamstimeService.new
+    @artwork = dst.populate_thumbnail_and_copyright(@artwork)
     if @artwork.save
       render json: @artwork, status: :created, location: book_url(@artwork)
     else
