@@ -19,8 +19,10 @@ class ArtworksController < ApplicationController
   def create
     @artwork = @book.artworks.new(artwork_params)
     
-    dst = DreamstimeService.new
-    @artwork = dst.populate_thumbnail_and_copyright(@artwork)
+    if @artwork.source == Artwork.source[:dreamstime]:
+      dst = DreamstimeService.new
+      @artwork = dst.populate_thumbnail_and_copyright(@artwork)
+
     if @artwork.save
       render json: @artwork, status: :created, location: book_url(@artwork)
     else
