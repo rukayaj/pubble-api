@@ -9,7 +9,7 @@ describe "Artworks API" do
 
   it 'shows a list of artworks' do
     create_list(:artwork, 10, book_id: @book.id)
-    get "#{@base_url}/artworks"
+    get "#{@base_url}"
     artwork_list = JSON.parse(response.body)
 
     expect(response).to be_success
