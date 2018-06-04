@@ -43,5 +43,9 @@ module App
 
     # Autoloads lib folder during development
     config.autoload_paths << Rails.root.join('lib')
+
+    config.generators do |g|
+      g.test_framework :rspec
+    end
   end
 end

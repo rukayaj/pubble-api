@@ -18,3 +18,5 @@ services:
 
   db:
     image: postgres:10.3-alpine
+    ports:
+      - 5555:5432
