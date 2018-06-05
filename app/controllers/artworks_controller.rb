@@ -20,8 +20,9 @@ class ArtworksController < ApplicationController
     @artwork = @book.artworks.new(artwork_params)
     
     if @artwork.source == 'dreamstime' # Artwork.source[:dreamstime]
-      dst = DreamstimeService.new
-      @artwork = dst.populate_thumbnail_and_copyright(@artwork)
+      dst = DreamstimeService.new(@artwork.source_id)
+      @artwork.thumbnail_url = dst.thumbnail_url 
+      @artwork.copyright = dst.copyright
     end
 
     if @artwork.save

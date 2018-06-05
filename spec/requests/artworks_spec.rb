@@ -24,7 +24,9 @@ describe "Artworks API" do
   end 
 
   it 'creates an artwork and returns it' do
-    artwork = build(:artwork, book_id: @book.id)
+    artwork = build(:artwork, book_id: @book.id, thumbnail_url: '', copyright: '')
+    dst_service = { thumbnail_url: 'http://myimage.com/cat.jpg', copyright: 'Furface' }
+    allow_any_instance_of(DreamstimeService).to receive(:get_dst_image).with(artwork.source_id).and_return(dst_service )
     expect{ post @base_url, params: { artwork: artwork.attributes } }.to change(Artwork, :count).by(+1)
     expect(response).to have_http_status :created
     
