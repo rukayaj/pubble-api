@@ -18,13 +18,7 @@ class ArtworksController < ApplicationController
   # POST /artworks
   def create
     @artwork = @book.artworks.new(artwork_params)
-    
-    if @artwork.source == 'dreamstime' # Artwork.source[:dreamstime]
-      dst = DreamstimeService.new(@artwork.source_id)
-      @artwork.thumbnail_url = dst.thumbnail_url 
-      @artwork.copyright = dst.copyright
-    end
-
+   
     if @artwork.save
       render json: @artwork, status: :created, location: book_url(@artwork)
     else
@@ -58,6 +52,6 @@ class ArtworksController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def artwork_params
-      params.require(:artwork).permit(:book_id, :page, :topic, :source, :source_id, :notes)
+      params.require(:artwork).permit(:book_id, :page, :topic, :source, :thumbnail_url, :copyright, :source_id, :notes)
     end
 end
